@@ -251,7 +251,7 @@ PHPAPI pcre_cache_entry* pcre_get_compiled_regex_cache(char *regex, int regex_le
 	char                *tmp = NULL;
 
 #if HAVE_SETLOCALE
-# ifdef PHP_WIN32 && ZTS
+# if defined(PHP_WIN32) && defined(ZTS)
 	_configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
 # endif
 	locale = setlocale(LC_CTYPE, NULL);
@@ -1050,6 +1050,10 @@ PHPAPI char *php_pcre_replace_impl(pcre_cache_entry *pce, char *subject, int sub
 		replace = Z_STRVAL_P(replace_val);
 		replace_len = Z_STRLEN_P(replace_val);
 		replace_end = replace + replace_len;
+	}
+
+	if (eval) {
+		php_error_docref(NULL TSRMLS_CC, E_DEPRECATED, "The /e modifier is deprecated, use preg_replace_callback instead");
 	}
 
 	/* Calculate the size of the offsets array, and allocate memory for it. */
